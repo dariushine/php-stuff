@@ -1,0 +1,35 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services:
+  php:
+    build: ./server
+    image: dariushine/php-db
+    volumes:
+      - ./server:/var/www/html/
+    environment:
+      - PGHOST=postgres
+      - PGUSER=youruser
+      - PGPASSWORD=yourpass
+    ports:
+    - 80:80
+
+  postgres:
+    image: '401832474328'
+    container_name: db
+    restart: unless-stopped
+    volumes:  
+      - dbdata:/data/db
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    environment:
+      - POSTGRES_USER=youruser
+      - POSTGRES_PASSWORD=yourpass
+
+  # adminer:
+  #   image: 9519517dc56c
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
+
+volumes:
+  dbdata:
